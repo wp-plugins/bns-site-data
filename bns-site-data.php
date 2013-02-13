@@ -3,7 +3,7 @@
 Plugin Name: BNS Site Data
 Plugin URI: http://buynowshop.com/plugins/
 Description: Show some basic site statistics.
-Version: 0.2
+Version: 0.3
 Author: Edward Caissie
 Author URI: http://edwardcaissie.com/
 Text Domain: bns-sd
@@ -21,9 +21,9 @@ License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * @link        http://buynowshop.com/plugins/bns-site-data
  * @link        https://github.com/Cais/bns-site-data
  * @link        http://wordpress.org/extend/plugins/bns-site-data
- * @version     0.2
+ * @version     0.3
  * @author      Edward Caissie <edward.caissie@gmail.com>
- * @copyright   Copyright (c) 2012, Edward Caissie
+ * @copyright   Copyright (c) 2012-2013, Edward Caissie
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License version 2, as published by the
@@ -44,60 +44,24 @@ License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  *
  * The license for this software can also likely be found here:
  * http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * @version 0.3
+ * @date    February 13, 2013
+ * Moved all code into class structure
+ * Added code block termination comments
  */
 
-/**
- * Enqueue Plugin Scripts and Styles
- * Adds plugin scripts and stylesheet; allows for custom stylesheet to be added
- * by end-user. These stylesheets will only affect public facing output.
- *
- * @package BNS_Site_Data
- * @since   0.1
- *
- * @uses    get_plugin_data
- * @uses    plugin_dir_path
- * @uses    plugin_dir_url
- * @uses    wp_enqueue_script
- * @uses    wp_enqueue_style
- *
- * @internal jQuery is enqueued as a dependency
- * @internal Used with action hook: wp_enqueue_scripts
- *
- * @version 0.1.1
- * @date    September 19, 2012
- * Correct error with undefined function
- *
- * @version 0.2
- * @date    November 26, 2012
- * Add custom script (end-user supplied) file call
- */
-function BNS_Site_Data_Scripts_and_Styles() {
-    /** @var $bns_sd_data - holds plugin data */
-    require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-    $bns_sd_data = get_plugin_data( __FILE__ );
-
-    /** Enqueue Scripts */
-    wp_enqueue_script( 'BNS-Site-Data-Scripts', plugin_dir_url( __FILE__ ) . 'bns-site-data-scripts.js', array( 'jquery' ), $bns_sd_data['Version'], 'true' );
-    /** Check if custom script file is readable (exists) */
-    if ( is_readable( plugin_dir_path( __FILE__ ) . 'bns-site-data-custom-scripts.js' ) ) {
-        wp_enqueue_script( 'BNS-Site-Data-Custom-Style', plugin_dir_url( __FILE__ ) . 'bns-site-data-custom-scripts.js', array( 'jquery' ), $bns_sd_data['Version'], 'true' );
-    }
-
-    /** Enqueue Style Sheets */
-    wp_enqueue_style( 'BNS-Site-Data-Style', plugin_dir_url( __FILE__ ) . 'bns-site-data-style.css', array(), $bns_sd_data['Version'], 'screen' );
-    /** Check if custom stylesheet is readable (exists) */
-    if ( is_readable( plugin_dir_path( __FILE__ ) . 'bns-site-data-custom-style.css' ) ) {
-        wp_enqueue_style( 'BNS-Site-Data-Custom-Style', plugin_dir_url( __FILE__ ) . 'bns-site-data-custom-style.css', array(), $bns_sd_data['Version'], 'screen' );
-    }
-}
-add_action( 'wp_enqueue_scripts', 'BNS_Site_Data_Scripts_and_Styles' );
-/** End: Enqueue Plugin Scripts and Styles */
-
-
-/** Start Class Extension */
 class BNS_Site_Data_Widget extends WP_Widget {
 
-    /** Create Widget */
+    /**
+     * Constructor / BNS Site Date Widget
+     *
+     * @package BNS_Site_Data
+     * @since   0.1
+     *
+     * @uses    WP_Widget (class)
+     * @uses    add_action
+     */
     function BNS_Site_Data_Widget() {
         /** Widget settings. */
         $widget_ops = array( 'classname' => 'bns-site-data', 'description' => __( 'Displays some site stuff.', 'bns-sd' ) );
@@ -105,8 +69,21 @@ class BNS_Site_Data_Widget extends WP_Widget {
         $control_ops = array( 'width' => 200, 'id_base' => 'bns-site-data' );
         /** Create the widget. */
         $this->WP_Widget( 'bns-site-data', 'BNS Site Data', $widget_ops, $control_ops );
-    }
-    /** End: Create Widget */
+
+        /** End: Enqueue Plugin Scripts and Styles */
+        add_action( 'wp_enqueue_scripts', array( $this, 'scripts_and_styles' ) );
+
+        /**
+         * Once the widget is registered it can be added/loaded during the
+         * widget initialization via an action hook.
+         */
+        add_action( 'widgets_init', array( $this, 'load_BNS_Site_Data_Widget' ) );
+
+        /** Add Shortcode */
+        add_shortcode( 'bns_site_data', array( $this, 'BNS_Site_Data_Shortcode' ) );
+
+    } /** End function - bns site data widget */
+
 
     /**
      * Overrides widget method from WP_Widget class
@@ -137,35 +114,41 @@ class BNS_Site_Data_Widget extends WP_Widget {
         $comments       = $instance['comments'];
         $attachments    = $instance['attachments'];
 
-
         /** Before widget (defined by themes). */
         /** @var $before_widget string - defined by theme */
         echo $before_widget;
 
         /** Widget title */
-        if ( $title )
+        if ( $title ) {
             /** @noinspection PhpUndefinedVariableInspection - IDE ONLY comment */
             echo $before_title . $title . $after_title;
+        } /** End if - title */
 
         /**
          * Initialize the data array; and, only add the values based on the
          * widget option panel settings.
          */
         $data = array();
-        if ( $posts )
+        if ( $posts ) {
             $data['Posts']          = wp_count_posts( 'post' )->publish;
-        if ( $pages )
+        } /** End if - posts */
+        if ( $pages ) {
             $data['Pages']          = wp_count_posts( 'page' )->publish;
-        if ( $cats )
+        } /** End if - pages */
+        if ( $cats ) {
             $data['Categories']     = wp_count_terms( 'category' );
-        if ( $tags )
+        } /** End if - categories */
+        if ( $tags ) {
             $data['Tags']           = wp_count_terms( 'post_tag' );
-        if ( $comments )
+        } /** End if - tags */
+        if ( $comments ) {
             $data['Comments']       = wp_count_comments()->approved;
-        if ( $attachments )
+        } /** End if - comments */
+        if ( $attachments ) {
             $data['Attachments']    = wp_count_posts( 'attachment' )->inherit;
+        } /** End if - attachments */
 
-        /** @var $output - initialize widget content output as an unordered list */
+        /** @var $output - initialize widget content as an unordered list */
         $output = '<ul class="bns-site-data-list">';
 
         /**
@@ -173,11 +156,12 @@ class BNS_Site_Data_Widget extends WP_Widget {
          * @internal dynamic filter hooks are available for each label; can you
          * say Mallory-Everest?!
          */
-        foreach ( $data as $label => $value )
+        foreach ( $data as $label => $value ) {
             $output .= apply_filters(
                 'bns_site_data_' . strtolower( $label ),
                 '<li class="bns-site-data-' . strtolower( $label ) . '">' . number_format( $value ) . ' ' . $label . '</li>'
             );
+        } /** End for - data as label value */
 
         /** Close the list */
         $output .= '</ul>';
@@ -187,8 +171,8 @@ class BNS_Site_Data_Widget extends WP_Widget {
 
         /** @var $after_widget (defined by themes). */
         echo $after_widget;
-    }
-    /** End: widget method override */
+    } /** End function - widget method override */
+
 
     /**
      * Overrides update method from WP_Widget class
@@ -218,8 +202,9 @@ class BNS_Site_Data_Widget extends WP_Widget {
         $instance['attachments']    = $new_instance['attachments'];
 
         return $instance;
-    }
-    /** End: update override */
+
+    } /** End function - update override */
+
 
     /**
      * Overrides form method from WP_Widget class
@@ -288,50 +273,90 @@ class BNS_Site_Data_Widget extends WP_Widget {
         </p>
 
     <?php
-    }
-    /** End: form override */
+    } /** End function - form override */
 
-}
-/** End: Class Extension */
 
-/**
- * Load BNS Site Data Widget
- * We need to take the widget code (read: the class BNS_Site_Data_Widget that
- * extends the WP_Widget class) and register it as a widget.
- *
- * @package BNS_Site_Data
- * @since   0.1
- *
- * @uses    register_widget
- */
-function load_BNS_Site_Data_Widget() {
-    register_widget( 'BNS_Site_Data_Widget' );
-}
+    /**
+     * Enqueue Plugin Scripts and Styles
+     * Adds plugin scripts and stylesheet; allows for custom stylesheet to be added
+     * by end-user. These stylesheets will only affect public facing output.
+     *
+     * @package BNS_Site_Data
+     * @since   0.1
+     *
+     * @uses    get_plugin_data
+     * @uses    plugin_dir_path
+     * @uses    plugin_dir_url
+     * @uses    wp_enqueue_script
+     * @uses    wp_enqueue_style
+     *
+     * @internal jQuery is enqueued as a dependency
+     * @internal Used with action hook: wp_enqueue_scripts
+     *
+     * @version 0.1.1
+     * @date    September 19, 2012
+     * Correct error with undefined function
+     *
+     * @version 0.2
+     * @date    November 26, 2012
+     * Add custom script (end-user supplied) file call
+     * Renamed `BNS_Site_Data_Scripts_and_Styles` to `scripts_and_styles`
+     */
+    function scripts_and_styles() {
+        /** @var $bns_sd_data - holds plugin data */
+        require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        $bns_sd_data = get_plugin_data( __FILE__ );
 
-/**
- * Once the widget is registered it can be added/loaded during the widget
- * initialization via an action hook.
- */
-add_action( 'widgets_init', 'load_BNS_Site_Data_Widget' );
+        /** Enqueue Scripts */
+        wp_enqueue_script( 'BNS-Site-Data-Scripts', plugin_dir_url( __FILE__ ) . 'bns-site-data-scripts.js', array( 'jquery' ), $bns_sd_data['Version'], 'true' );
+        /** Check if custom script file is readable (exists) */
+        if ( is_readable( plugin_dir_path( __FILE__ ) . 'bns-site-data-custom-scripts.js' ) ) {
+            wp_enqueue_script( 'BNS-Site-Data-Custom-Style', plugin_dir_url( __FILE__ ) . 'bns-site-data-custom-scripts.js', array( 'jquery' ), $bns_sd_data['Version'], 'true' );
+        } /** End if - is readable */
 
-/**
- * BNS Site Data Shortcode
- * Adds shortcode functionality by using the PHP output buffer methods to
- * capture `the_widget` output and return the data to be displayed via the use
- * of the `bns_site_data` shortcode.
- *
- * @package BNS_Site_Data
- * @since   0.1
- *
- * @uses    the_widget
- * @uses    shortcode_atts
- *
- * @internal used with add_shortcode
- */
-function BNS_Site_Data_Shortcode( $atts ) {
+        /** Enqueue Style Sheets */
+        wp_enqueue_style( 'BNS-Site-Data-Style', plugin_dir_url( __FILE__ ) . 'bns-site-data-style.css', array(), $bns_sd_data['Version'], 'screen' );
+        /** Check if custom stylesheet is readable (exists) */
+        if ( is_readable( plugin_dir_path( __FILE__ ) . 'bns-site-data-custom-style.css' ) ) {
+            wp_enqueue_style( 'BNS-Site-Data-Custom-Style', plugin_dir_url( __FILE__ ) . 'bns-site-data-custom-style.css', array(), $bns_sd_data['Version'], 'screen' );
+        } /** End if - is readable */
 
-    /** Start output buffer capture */
-    ob_start(); ?>
+    } /** End function - scripts and styles */
+
+
+    /**
+     * Load BNS Site Data Widget
+     * We need to take the widget code (read: the class BNS_Site_Data_Widget that
+     * extends the WP_Widget class) and register it as a widget.
+     *
+     * @package BNS_Site_Data
+     * @since   0.1
+     *
+     * @uses    register_widget
+     */
+    function load_BNS_Site_Data_Widget() {
+        register_widget( 'BNS_Site_Data_Widget' );
+    } /** End function - load widget */
+
+
+    /**
+     * BNS Site Data Shortcode
+     * Adds shortcode functionality by using the PHP output buffer methods to
+     * capture `the_widget` output and return the data to be displayed via the use
+     * of the `bns_site_data` shortcode.
+     *
+     * @package BNS_Site_Data
+     * @since   0.1
+     *
+     * @uses    the_widget
+     * @uses    shortcode_atts
+     *
+     * @internal used with add_shortcode
+     */
+    function BNS_Site_Data_Shortcode( $atts ) {
+
+        /** Start output buffer capture */
+        ob_start(); ?>
         <div class="bns-site-data-shortcode">
             <?php
             /**
@@ -359,7 +384,7 @@ function BNS_Site_Data_Shortcode( $atts ) {
                     $atts
                 ),
                 /**
-                 * Override the widget arguments and set to null. This will set the
+                 * Override the widget arguments and set to null. This will set
                  * theme related widget definitions to null for aesthetic purposes.
                  */
                 $args = array (
@@ -369,13 +394,19 @@ function BNS_Site_Data_Shortcode( $atts ) {
                     'after_widget'    => ''
                 ) ); ?>
         </div><!-- .bns-site-data-shortcode -->
-    <?php
-    /** Get the current output buffer contents and delete current output buffer. */
-    /** @var $bns_site_data_output string */
-    $bns_site_data_output = ob_get_clean();
+        <?php
+        /** Get the current output buffer contents and delete current output buffer. */
+        /** @var $bns_site_data_output string */
+        $bns_site_data_output = ob_get_clean();
 
-    /** Return the output buffer data for use with add_shortcode output */
-    return $bns_site_data_output;
-}
-add_shortcode( 'bns_site_data', 'BNS_Site_Data_Shortcode' );
-/** End: Shortcode */
+        /** Return the output buffer data for use with add_shortcode output */
+        return $bns_site_data_output;
+
+    } /** End function - bns site data shortcode */
+
+
+} /** End class - bns site data */
+
+
+/** @var $bnssd - instantiate the class */
+$bnssd = new BNS_Site_Data_Widget();
