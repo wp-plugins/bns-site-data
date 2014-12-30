@@ -2,7 +2,7 @@
 Contributors: cais
 Donate link: http://buynowshop.com
 Tags: widget-only, site-statistics
-Requires at least: 2.8
+Requires at least: 3.6
 Tested up to: 4.1
 Stable tag: 0.3.2
 License: GNU General Public License v2
@@ -56,7 +56,7 @@ I would recommend creating and using the 'bns-site-data-custom-style.css' styles
 2. The default widget and default shortcode output (using sample data).
 
 == Other Notes ==
-* Copyright 2012-2013  Edward Caissie  (email : edward.caissie@gmail.com)
+* Copyright 2012-2014  Edward Caissie  (email : edward.caissie@gmail.com)
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License version 2,
@@ -80,6 +80,16 @@ I would recommend creating and using the 'bns-site-data-custom-style.css' styles
 Please stay current with your WordPress installation, your active theme, and your plugins.
 
 == Changelog ==
+= 0.4 =
+* Released December 2014
+* Added `bns-site-data.pot` file for translators
+* Added "in plugin update message"
+* Added WordPress version check for 3.6 with exit messages
+* Changed `bns-sd` text domain to `bns-site-data`
+* Improved i18n implementation on output labels
+* Renamed function to `__construct` from `BNS_Site_Data_Widget`
+* Updates to code formatting to better meet WordPress Coding Standards
+
 = 0.3.2 =
 * Released September 2013
 * Added third parameter to `shortcode_atts` for automatic filter creation

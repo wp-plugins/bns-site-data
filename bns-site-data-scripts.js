@@ -5,7 +5,7 @@
  * @since       0.1
  *
  * @author      Edward Caissie <edward.caissie@gmail.com>
- * @copyright   Copyright (c) 2012-2013, Edward Caissie
+ * @copyright   Copyright (c) 2012-2014, Edward Caissie
  *
  * This file is part of BNS Site Data
  *
@@ -30,8 +30,8 @@
  * http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-jQuery( document ).ready( function( $ ) {
+jQuery(document).ready(function ($) {
     /** Note: $() will work as an alias for jQuery() inside of this function */
     /** Add 'stripe' class for alternating list colors */
-    $( 'ul.bns-site-data-list li:even' ).addClass( 'stripe' );
-} );
+    $('ul.bns-site-data-list li:even').addClass('stripe');
+});
