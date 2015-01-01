@@ -1,0 +1,121 @@
+# Copyright (C) 2014-2015 BNS Site Data
+# This file is distributed under the same license as the BNS Site Data package.
+msgid ""
+msgstr ""
+"Project-Id-Version: BNS Site Data 0.4\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/bns-site-data\n"
+"POT-Creation-Date: 2014-12-30 03:51:52+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: bns-site-data.php:78
+msgid "BNS Site Data requires WordPress version 3.6 or newer. %1$s"
+msgstr ""
+
+#: bns-site-data.php:78
+msgid "Please Update!"
+msgstr ""
+
+#: bns-site-data.php:80
+msgid "In reference to the shortcode default attributes filter. See %1$s."
+msgstr ""
+
+#: bns-site-data.php:80
+msgid "this link"
+msgstr ""
+
+#: bns-site-data.php:89
+msgid "Displays some site stuff."
+msgstr ""
+
+#: bns-site-data.php:213
+msgid "Post"
+msgid_plural "Posts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bns-site-data.php:215
+msgid "Page"
+msgid_plural "Pages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bns-site-data.php:217
+msgid "Category"
+msgid_plural "Categories"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bns-site-data.php:219
+msgid "Tag"
+msgid_plural "Tags"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bns-site-data.php:221
+msgid "Comment"
+msgid_plural "Comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bns-site-data.php:223
+msgid "Attachment"
+msgid_plural "Attachments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: bns-site-data.php:306
+msgid "Site Data"
+msgstr ""
+
+#: bns-site-data.php:317
+msgid "Title:"
+msgstr ""
+
+#: bns-site-data.php:327
+msgid "Show your posts count?"
+msgstr ""
+
+#: bns-site-data.php:335
+msgid "Show your pages count?"
+msgstr ""
+
+#: bns-site-data.php:342
+msgid "Show your categories count?"
+msgstr ""
+
+#: bns-site-data.php:349
+msgid "Show your tags count?"
+msgstr ""
+
+#: bns-site-data.php:357
+msgid "Show your comments count?"
+msgstr ""
+
+#: bns-site-data.php:365
+msgid "Show your attachments count?"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "BNS Site Data"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://buynowshop.com/plugins/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Show some basic site statistics."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Edward Caissie"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://edwardcaissie.com/"
+msgstr ""
