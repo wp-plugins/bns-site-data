@@ -4,7 +4,7 @@ Donate link: http://buynowshop.com
 Tags: widget-only, site-statistics
 Requires at least: 3.6
 Tested up to: 4.1
-Stable tag: 0.4
+Stable tag: 0.4.1
 License: GNU General Public License v2
 License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
@@ -80,6 +80,10 @@ I would recommend creating and using the 'bns-site-data-custom-style.css' styles
 Please stay current with your WordPress installation, your active theme, and your plugins.
 
 == Changelog ==
+= 0.4.1 =
+* Released New Year's Eve 2014
+* Specifically add function to load plugin textdomain
+
 = 0.4 =
 * Released December 2014
 * Added `bns-site-data.pot` file for translators
